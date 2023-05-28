@@ -61,7 +61,7 @@ public class SecretLarderRoom extends SecretRoom {
 		while (extraFood > 0){
 			Food food;
 			if (extraFood >= Hunger.STARVING){
-				food = new Pasty();
+				food = Pasty.createInstance();
 				extraFood -= Hunger.STARVING;
 			} else {
 				food = new ChargrilledMeat();

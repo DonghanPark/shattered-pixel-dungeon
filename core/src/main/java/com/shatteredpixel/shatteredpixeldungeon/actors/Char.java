@@ -26,48 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.Electricity;
 import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.ToxicGas;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Adrenaline;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ArcaneArmor;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AscensionChallenge;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Barkskin;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Berserk;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bleeding;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Bless;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Burning;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ChampionEnemy;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Charm;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Chill;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Corrosion;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Dread;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FireImbue;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.FrostImbue;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Fury;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Haste;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hex;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LifeLink;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LostInventory;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MagicalSleep;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Momentum;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.MonkEnergy;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Poison;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Preparation;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.ShieldBuff;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.SnipersMark;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Speed;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Stamina;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Terror;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vertigo;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Vulnerable;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Weakness;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroSubClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
@@ -151,8 +110,9 @@ public abstract class Char extends Actor {
 	
 	public boolean[] fieldOfView = null;
 	
-	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
-	
+//	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
+	private Buff_Observer buff_collection = buff_collection_init;
+
 	@Override
 	protected boolean act() {
 		if (fieldOfView == null || fieldOfView.length != Dungeon.level.length()){
@@ -285,7 +245,9 @@ public abstract class Char extends Actor {
 		bundle.put( POS, pos );
 		bundle.put( TAG_HP, HP );
 		bundle.put( TAG_HT, HT );
-		bundle.put( BUFFS, buffs );
+//		bundle.put( BUFFS, buffs );
+		buff_collection.put(BUFFS, bundle);
+
 	}
 	
 	@Override
@@ -810,14 +772,14 @@ public abstract class Char extends Actor {
 	}
 	
 	public synchronized LinkedHashSet<Buff> buffs() {
-		return new LinkedHashSet<>(buffs);
+		return buff_collection.get();
 	}
 	
 	@SuppressWarnings("unchecked")
 	//returns all buffs assignable from the given buff class
 	public synchronized <T extends Buff> HashSet<T> buffs( Class<T> c ) {
 		HashSet<T> filtered = new HashSet<>();
-		for (Buff b : buffs) {
+		for (Buff b : buff_collection.get()) {
 			if (c.isInstance( b )) {
 				filtered.add( (T)b );
 			}
@@ -828,7 +790,7 @@ public abstract class Char extends Actor {
 	@SuppressWarnings("unchecked")
 	//returns an instance of the specific buff class, if it exists. Not just assignable
 	public synchronized  <T extends Buff> T buff( Class<T> c ) {
-		for (Buff b : buffs) {
+		for (Buff b : buff_collection.get()) {
 			if (b.getClass() == c) {
 				return (T)b;
 			}
@@ -838,7 +800,7 @@ public abstract class Char extends Actor {
 
 	public synchronized boolean isCharmedBy( Char ch ) {
 		int chID = ch.id();
-		for (Buff b : buffs) {
+		for (Buff b : buff_collection.get()) {
 			if (b instanceof Charm && ((Charm)b).object == chID) {
 				return true;
 			}
@@ -860,7 +822,7 @@ public abstract class Char extends Actor {
 			return false; //can't add buffs while frozen and game is loaded
 		}
 
-		buffs.add( buff );
+		buff_collection.add( buff );
 		if (Actor.chars().contains(this)) Actor.add( buff );
 
 		if (sprite != null && buff.announced) {
@@ -884,7 +846,8 @@ public abstract class Char extends Actor {
 	
 	public synchronized boolean remove( Buff buff ) {
 		
-		buffs.remove( buff );
+//		buffs.remove( buff );
+		buff_collection.remove( buff );
 		Actor.remove( buff );
 
 		return true;
@@ -898,13 +861,11 @@ public abstract class Char extends Actor {
 	
 	@Override
 	protected synchronized void onRemove() {
-		for (Buff buff : buffs.toArray(new Buff[buffs.size()])) {
-			buff.detach();
-		}
+		buff_collection.detach();
 	}
 	
 	public synchronized void updateSpriteState() {
-		for (Buff buff:buffs) {
+		for (Buff buff:buff_collection.get()) {
 			buff.fx( true );
 		}
 	}

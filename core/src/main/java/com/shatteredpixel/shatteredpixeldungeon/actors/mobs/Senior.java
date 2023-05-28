@@ -30,7 +30,7 @@ public class Senior extends Monk {
 	{
 		spriteClass = SeniorSprite.class;
 
-		loot = new Pasty();
+		loot = Pasty.createInstance();
 		lootChance = 1f;
 	}
 	

@@ -21,54 +21,15 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.items.food;
 
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Recharging;
-import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
-import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
-
-import java.util.Calendar;
 
 public class Pasty extends Food {
-
 	//TODO: implement fun stuff for other holidays
 	//TODO: probably should externalize this if I want to add any more festive stuff.
-	private enum Holiday{
-		NONE,
-		EASTER, //TBD
-		HWEEN,//2nd week of october though first day of november
-		XMAS //3rd week of december through first week of january
-	}
-
-	private static Holiday holiday;
-
-	static{
-
-		holiday = Holiday.NONE;
-
-		final Calendar calendar = Calendar.getInstance();
-		switch(calendar.get(Calendar.MONTH)){
-			case Calendar.JANUARY:
-				if (calendar.get(Calendar.WEEK_OF_MONTH) == 1)
-					holiday = Holiday.XMAS;
-				break;
-			case Calendar.OCTOBER:
-				if (calendar.get(Calendar.WEEK_OF_MONTH) >= 2)
-					holiday = Holiday.HWEEN;
-				break;
-			case Calendar.NOVEMBER:
-				if (calendar.get(Calendar.DAY_OF_MONTH) == 1)
-					holiday = Holiday.HWEEN;
-				break;
-			case Calendar.DECEMBER:
-				if (calendar.get(Calendar.WEEK_OF_MONTH) >= 3)
-					holiday = Holiday.XMAS;
-				break;
-		}
-	}
+	protected static HolidayEnum holiday;
+    static {
+        holiday = Holiday.getHoliday();
+    }
 
 	{
 		reset();
@@ -77,68 +38,17 @@ public class Pasty extends Food {
 
 		bones = true;
 	}
-	
-	@Override
-	public void reset() {
-		super.reset();
-		switch(holiday){
-			case NONE:
-				image = ItemSpriteSheet.PASTY;
-				break;
-			case HWEEN:
-				image = ItemSpriteSheet.PUMPKIN_PIE;
-				break;
-			case XMAS:
-				image = ItemSpriteSheet.CANDY_CANE;
-				break;
-		}
-	}
-	
-	@Override
-	protected void satisfy(Hero hero) {
-		super.satisfy(hero);
-		
-		switch(holiday){
-			case NONE:
-				break; //do nothing extra
-			case HWEEN:
-				//heals for 10% max hp
-				hero.HP = Math.min(hero.HP + hero.HT/10, hero.HT);
-				hero.sprite.emitter().burst( Speck.factory( Speck.HEALING ), 1 );
-				break;
-			case XMAS:
-				Buff.affect( hero, Recharging.class, 2f ); //half of a charge
-				ScrollOfRecharging.charge( hero );
-				break;
-		}
-	}
 
-	@Override
-	public String name() {
-		switch(holiday){
-			case NONE: default:
-				return Messages.get(this, "pasty");
-			case HWEEN:
-				return Messages.get(this, "pie");
-			case XMAS:
-				return Messages.get(this, "cane");
-		}
-	}
-
-	@Override
-	public String info() {
-		switch(holiday){
-			case NONE: default:
-				return Messages.get(this, "pasty_desc");
-			case HWEEN:
-				return Messages.get(this, "pie_desc");
-			case XMAS:
-				return Messages.get(this, "cane_desc");
-		}
-	}
-	
-	@Override
-	public int value() {
-		return 20 * quantity;
-	}
+    public static Pasty createInstance() { // singleton
+        switch (holiday) {
+            case NONE:
+                return new PastyNONE();
+            case HWEEN:
+                return new PastyHWEEN();
+            case XMAS:
+                return new PastyXMAS();
+            default:
+                throw new IllegalArgumentException("Invalid holiday value: " + holiday);
+        }
+    }
 }
