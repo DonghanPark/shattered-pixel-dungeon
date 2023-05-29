@@ -5,6 +5,7 @@ import com.watabou.utils.Bundle;
 import java.util.LinkedHashSet;
 import java.util.stream.Collectors;
 
+
 public class Buff_collection implements Buff_Observer{
     private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
 
@@ -27,6 +28,8 @@ public class Buff_collection implements Buff_Observer{
     public void remove(Buff buff){
         buffs.remove(buff);
     }
+
+    @SuppressWarnings("NewApi")
     @Override
     public void detach(){
         buffs.stream().collect(Collectors.toList()).forEach(buff -> {buff.detach();});
