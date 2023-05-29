@@ -1,38 +1,34 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
+import com.watabou.utils.Bundlable;
 import com.watabou.utils.Bundle;
 
-import java.util.LinkedHashSet;
-import java.util.stream.Collectors;
 
-
-public class Buff_collection implements Buff_Observer{
-    private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
-
-
-    @Override
-    public void put(String key, Bundle bundle){
-        bundle.put(key,buffs);
+public class Buff_collection implements Buff_Observer, Bundlable {
+    private Buff buff;
+    public Buff_collection(Buff buff) {
+        this.buff = buff;
     }
 
     @Override
-    public LinkedHashSet<Buff> get(){
-        return new LinkedHashSet<>(buffs);
+    public Buff get(){
+        return buff;
     }
 
-    @Override
-    public void add(Buff buff){
-        buffs.add(buff);
-    }
-    @Override
-    public void remove(Buff buff){
-        buffs.remove(buff);
-    }
 
     @SuppressWarnings("NewApi")
     @Override
     public void detach(){
-        buffs.stream().collect(Collectors.toList()).forEach(buff -> {buff.detach();});
+        buff.detach();
     }
 
+    @Override
+    public void restoreFromBundle(Bundle bundle) {
+        buff.restoreFromBundle(bundle);
+    }
+
+    @Override
+    public void storeInBundle(Bundle bundle) {
+        buff.storeInBundle(bundle);
+    }
 }
