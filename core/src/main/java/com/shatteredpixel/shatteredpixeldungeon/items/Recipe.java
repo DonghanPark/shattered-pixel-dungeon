@@ -26,6 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.StewedMeat;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.StewedMeatEnum;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.AlchemicalCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.BlizzardBrew;
@@ -175,7 +176,7 @@ public abstract class Recipe {
 		new ExoticScroll.ScrollToExotic(),
 		new ArcaneResin.Recipe(),
 		new Alchemize.Recipe(),
-		new StewedMeat.oneMeat()
+		new StewedMeat.StewedMeatRecipe(StewedMeatEnum.STEWED_MEAT_ONE)
 	};
 	
 	private static Recipe[] twoIngredientRecipes = new Recipe[]{
@@ -205,12 +206,12 @@ public abstract class Recipe {
 		new WildEnergy.Recipe(),
 		new TelekineticGrab.Recipe(),
 		new SummonElemental.Recipe(),
-		new StewedMeat.twoMeat()
+		new StewedMeat.StewedMeatRecipe(StewedMeatEnum.STEWED_MEAT_TWO)
 	};
 	
 	private static Recipe[] threeIngredientRecipes = new Recipe[]{
 		new Potion.SeedToPotion(),
-		new StewedMeat.threeMeat(),
+		new StewedMeat.StewedMeatRecipe(StewedMeatEnum.STEWED_MEAT_THREE),
 		new MeatPie.Recipe()
 	};
 	

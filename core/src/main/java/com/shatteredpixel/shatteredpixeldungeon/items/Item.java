@@ -43,7 +43,6 @@ import com.shatteredpixel.shatteredpixeldungeon.scenes.CellSelector;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSprite;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
-import com.shatteredpixel.shatteredpixeldungeon.ui.InventoryPane;
 import com.shatteredpixel.shatteredpixeldungeon.ui.QuickSlotButton;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.noosa.particles.Emitter;
@@ -58,15 +57,15 @@ import java.util.Comparator;
 
 public class Item implements Bundlable {
 
-	protected static final String TXT_TO_STRING_LVL		= "%s %+d";
-	protected static final String TXT_TO_STRING_X		= "%s x%d";
+	private static final String TXT_TO_STRING_LVL		= "%s %+d";
+	private static final String TXT_TO_STRING_X		= "%s x%d";
 	
-	protected static final float TIME_TO_THROW		= 1.0f;
-	protected static final float TIME_TO_PICK_UP	= 1.0f;
-	protected static final float TIME_TO_DROP		= 1.0f;
+	private static final float TIME_TO_THROW		= 1.0f;
+	private static final float TIME_TO_PICK_UP	= 1.0f;
+	private static final float TIME_TO_DROP		= 1.0f;
 	
-	public static final String AC_DROP		= "DROP";
-	public static final String AC_THROW		= "THROW";
+	private static final String AC_DROP		= "DROP";
+	private static final String AC_THROW		= "THROW";
 	
 	protected String defaultAction;
 	public boolean usesTargeting;
@@ -101,11 +100,39 @@ public class Item implements Bundlable {
 			return Generator.Category.order( lhs ) - Generator.Category.order( rhs );
 		}
 	};
-	
+
+	public static String getTXT_TO_STRING_LVL() {
+		return TXT_TO_STRING_LVL;
+	}
+
+	public static String getTXT_TO_STRING_X() {
+		return TXT_TO_STRING_X;
+	}
+
+	public static float getTIME_TO_THROW() {
+		return TIME_TO_THROW;
+	}
+
+	public static float getTIME_TO_PICK_UP() {
+		return TIME_TO_PICK_UP;
+	}
+
+	public static float getTIME_TO_DROP() {
+		return TIME_TO_DROP;
+	}
+
+	public static String getAC_DROP() {
+		return AC_DROP;
+	}
+
+	public static String getAC_THROW() {
+		return AC_THROW;
+	}
+
 	public ArrayList<String> actions( Hero hero ) {
 		ArrayList<String> actions = new ArrayList<>();
-		actions.add( AC_DROP );
-		actions.add( AC_THROW );
+		actions.add(getAC_DROP());
+		actions.add(getAC_THROW());
 		return actions;
 	}
 
@@ -122,7 +149,7 @@ public class Item implements Bundlable {
 			
 			GameScene.pickUp( this, pos );
 			Sample.INSTANCE.play( Assets.Sounds.ITEM );
-			hero.spendAndNext( TIME_TO_PICK_UP );
+			hero.spendAndNext(getTIME_TO_PICK_UP());
 			return true;
 			
 		} else {
@@ -131,7 +158,7 @@ public class Item implements Bundlable {
 	}
 	
 	public void doDrop( Hero hero ) {
-		hero.spendAndNext(TIME_TO_DROP);
+		hero.spendAndNext(getTIME_TO_DROP());
 		int pos = hero.pos;
 		Dungeon.level.drop(detachAll(hero.belongings.backpack), pos).sprite.drop(pos);
 	}
@@ -151,13 +178,13 @@ public class Item implements Bundlable {
 		curUser = hero;
 		curItem = this;
 		
-		if (action.equals( AC_DROP )) {
+		if (action.equals(getAC_DROP())) {
 			
 			if (hero.belongings.backpack.contains(this) || isEquipped(hero)) {
 				doDrop(hero);
 			}
 			
-		} else if (action.equals( AC_THROW )) {
+		} else if (action.equals(getAC_THROW())) {
 			
 			if (hero.belongings.backpack.contains(this) || isEquipped(hero)) {
 				doThrow(hero);
@@ -457,10 +484,10 @@ public class Item implements Bundlable {
 		String name = name();
 
 		if (visiblyUpgraded() != 0)
-			name = Messages.format( TXT_TO_STRING_LVL, name, visiblyUpgraded()  );
+			name = Messages.format(getTXT_TO_STRING_LVL(), name, visiblyUpgraded()  );
 
 		if (quantity > 1)
-			name = Messages.format( TXT_TO_STRING_X, name, quantity );
+			name = Messages.format(getTXT_TO_STRING_X(), name, quantity );
 
 		return name;
 
@@ -649,7 +676,7 @@ public class Item implements Bundlable {
 	}
 	
 	public float castDelay( Char user, int dst ){
-		return TIME_TO_THROW;
+		return getTIME_TO_THROW();
 	}
 	
 	protected static Hero curUser = null;

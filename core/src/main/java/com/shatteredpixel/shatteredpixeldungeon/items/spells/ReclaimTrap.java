@@ -27,7 +27,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.quest.MetalShard;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMapping;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRecharging;
-import com.shatteredpixel.shatteredpixeldungeon.levels.traps.SummoningTrap;
 import com.shatteredpixel.shatteredpixeldungeon.levels.traps.Trap;
 import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
@@ -53,8 +52,8 @@ public class ReclaimTrap extends TargetedSpell {
 		ArrayList<String> actions = super.actions(hero);
 		//prevents exploits
 		if (storedTrap != null){
-			actions.remove(AC_DROP);
-			actions.remove(AC_THROW);
+			actions.remove(getAC_DROP());
+			actions.remove(getAC_THROW());
 		}
 		return actions;
 	}
