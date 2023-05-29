@@ -815,12 +815,15 @@ public abstract class Char extends Actor {
 		return false;
 	}
 
+	public synchronized boolean add(Buff buff){
+		return add(Build_buff_collection.to_colleciton(buff));
+	}
 	public synchronized boolean add(Buff_Observer buff ) {
 
 		if (buff(PotionOfCleansing.Cleanse.class) != null) { //cleansing buff
 			if (buff.get().type == NEGATIVE
-					&& !(buff instanceof AllyBuff)
-					&& !(buff instanceof LostInventory)){
+					&& !(buff.get() instanceof AllyBuff)
+					&& !(buff.get() instanceof LostInventory)){
 				return false;
 			}
 		}

@@ -5,7 +5,7 @@ import com.watabou.utils.Bundle;
 
 
 public class Buff_collection implements Buff_Observer, Bundlable {
-    private Buff buff;
+    private final Buff buff;
     public Buff_collection(Buff buff) {
         this.buff = buff;
     }
@@ -21,6 +21,7 @@ public class Buff_collection implements Buff_Observer, Bundlable {
     public void detach(){
         buff.detach();
     }
+
 
     @Override
     public void restoreFromBundle(Bundle bundle) {
