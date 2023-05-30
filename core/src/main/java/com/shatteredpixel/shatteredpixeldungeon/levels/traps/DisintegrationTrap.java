@@ -25,19 +25,17 @@ import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.shatteredpixel.shatteredpixeldungeon.Badges;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
-import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Beam;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
-import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.DungeonTilemap;
 import com.shatteredpixel.shatteredpixeldungeon.utils.GLog;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Random;
 
-public class DisintegrationTrap extends Trap {
+public class DisintegrationTrap extends Trap implements TrapActivate {
 
 	{
 		color = VIOLET;
@@ -49,21 +47,7 @@ public class DisintegrationTrap extends Trap {
 
 	@Override
 	public void activate() {
-		Char target = Actor.findChar(pos);
-		
-		//find the closest char that can be aimed at
-		if (target == null){
-			float closestDist = Float.MAX_VALUE;
-			for (Char ch : Actor.chars()){
-				float curDist = Dungeon.level.trueDistance(pos, ch.pos);
-				if (ch.invisible > 0) curDist += 1000;
-				Ballistica bolt = new Ballistica(pos, ch.pos, Ballistica.PROJECTILE);
-				if (bolt.collisionPos == ch.pos && curDist < closestDist){
-					target = ch;
-					closestDist = curDist;
-				}
-			}
-		}
+		Char target = TrapActivate.findTheClosestChar(pos);
 		
 		Heap heap = Dungeon.level.heaps.get(pos);
 		if (heap != null) heap.explode();
@@ -83,6 +67,5 @@ public class DisintegrationTrap extends Trap {
 				}
 			}
 		}
-
 	}
 }
