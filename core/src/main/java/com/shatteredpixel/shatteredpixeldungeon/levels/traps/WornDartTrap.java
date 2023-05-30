@@ -27,13 +27,12 @@ import com.shatteredpixel.shatteredpixeldungeon.ShatteredPixelDungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.missiles.darts.Dart;
-import com.shatteredpixel.shatteredpixeldungeon.mechanics.Ballistica;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.watabou.noosa.audio.Sample;
 import com.watabou.utils.Callback;
 import com.watabou.utils.Random;
 
-public class WornDartTrap extends Trap {
+public class WornDartTrap extends Trap implements TrapActivate {
 
 	{
 		color = GREY;
@@ -45,20 +44,8 @@ public class WornDartTrap extends Trap {
 
 	@Override
 	public void activate() {
-		Char target = Actor.findChar(pos);
+		Char target = TrapActivate.findTheClosestChar(pos);
 
-		if (target == null){
-			float closestDist = Float.MAX_VALUE;
-			for (Char ch : Actor.chars()){
-				float curDist = Dungeon.level.trueDistance(pos, ch.pos);
-				if (ch.invisible > 0) curDist += 1000;
-				Ballistica bolt = new Ballistica(pos, ch.pos, Ballistica.PROJECTILE);
-				if (bolt.collisionPos == ch.pos && curDist < closestDist){
-					target = ch;
-					closestDist = curDist;
-				}
-			}
-		}
 		if (target != null) {
 			final Char finalTarget = target;
 			final WornDartTrap trap = this;

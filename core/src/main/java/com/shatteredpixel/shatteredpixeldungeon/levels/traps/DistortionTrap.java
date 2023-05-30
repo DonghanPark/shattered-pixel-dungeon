@@ -39,7 +39,6 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Senior;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Wraith;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.npcs.RatKing;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.watabou.utils.Random;
 import com.watabou.utils.Reflection;
@@ -47,7 +46,7 @@ import com.watabou.utils.Reflection;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class DistortionTrap extends Trap implements MobsRespawnPoints {
+public class DistortionTrap extends Trap implements TrapActivate {
 
 	private static final float DELAY = 2f;
 
@@ -67,7 +66,7 @@ public class DistortionTrap extends Trap implements MobsRespawnPoints {
 	public void activate() {
 
 		int nMobs = 3;
-		ArrayList<Integer> respawnPoints = MobsRespawnPoints.getMobsRespawnPoints(nMobs, pos);
+		ArrayList<Integer> respawnPoints = TrapActivate.getMobsRespawnPoints(nMobs, pos);
 
 		ArrayList<Mob> mobs = new ArrayList<>();
 
@@ -123,18 +122,9 @@ public class DistortionTrap extends Trap implements MobsRespawnPoints {
 			mobs.add(mob);
 		}
 
-		//important to process the visuals and pressing of cells last, so spawned mobs have a chance to occupy cells first
-		Trap t;
-		for (Mob mob : mobs){
-			//manually trigger traps first to avoid sfx spam
-			if ((t = Dungeon.level.traps.get(mob.pos)) != null && t.active){
-				if (t.disarmedByActivation) t.disarm();
-				t.reveal();
-				t.activate();
-			}
-			ScrollOfTeleportation.appear(mob, mob.pos);
-			Dungeon.level.occupyCell(mob);
-		}
+		TrapActivate.processSpawnedMobsAndTraps(mobs);
 
 	}
+
+
 }
