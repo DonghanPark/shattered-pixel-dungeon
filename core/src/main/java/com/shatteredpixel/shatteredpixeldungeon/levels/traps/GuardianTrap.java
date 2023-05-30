@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Statue;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.StatueSprite;
 
-public class GuardianTrap extends Trap implements AlarmActivate{
+public class GuardianTrap extends Trap implements TrapActivate {
 
 	{
 		color = RED;
@@ -36,7 +36,7 @@ public class GuardianTrap extends Trap implements AlarmActivate{
 	@Override
 	public void activate() {
 
-		AlarmActivate.extracted(pos, this);
+		TrapActivate.startAlarmDevice(pos, this);
 
 		for (int i = 0; i < (Dungeon.depth - 5)/5; i++){
 			Guardian guardian = new Guardian();

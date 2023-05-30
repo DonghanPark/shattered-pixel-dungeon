@@ -24,12 +24,11 @@ package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
-import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTeleportation;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
 
 import java.util.ArrayList;
 
-public class SummoningTrap extends Trap implements MobsRespawnPoints {
+public class SummoningTrap extends Trap implements TrapActivate {
 
 	private static final float DELAY = 2f;
 
@@ -42,7 +41,7 @@ public class SummoningTrap extends Trap implements MobsRespawnPoints {
 	public void activate() {
 
 		int nMobs = 1;
-		ArrayList<Integer> respawnPoints = MobsRespawnPoints.getMobsRespawnPoints(nMobs, pos);
+		ArrayList<Integer> respawnPoints = TrapActivate.getMobsRespawnPoints(nMobs, pos);
 
 		ArrayList<Mob> mobs = new ArrayList<>();
 
@@ -59,18 +58,6 @@ public class SummoningTrap extends Trap implements MobsRespawnPoints {
 			}
 		}
 
-		//important to process the visuals and pressing of cells last, so spawned mobs have a chance to occupy cells first
-		Trap t;
-		for (Mob mob : mobs){
-			//manually trigger traps first to avoid sfx spam
-			if ((t = Dungeon.level.traps.get(mob.pos)) != null && t.active){
-				if (t.disarmedByActivation) t.disarm();
-				t.reveal();
-				t.activate();
-			}
-			ScrollOfTeleportation.appear(mob, mob.pos);
-			Dungeon.level.occupyCell(mob);
-		}
-
+		TrapActivate.processSpawnedMobsAndTraps(mobs);
 	}
 }
