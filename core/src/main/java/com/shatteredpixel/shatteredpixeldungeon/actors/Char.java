@@ -80,6 +80,9 @@ import com.watabou.utils.Random;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
+
+import static com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff.buffType.NEGATIVE;
 
 public abstract class Char extends Actor {
 	
@@ -111,7 +114,7 @@ public abstract class Char extends Actor {
 	public boolean[] fieldOfView = null;
 	
 //	private LinkedHashSet<Buff> buffs = new LinkedHashSet<>();
-	private Buff_Observer buff_collection = buff_collection_init;
+	private LinkedHashSet<Buff_Observer> buff_collection = new LinkedHashSet<>();
 
 	@Override
 	protected boolean act() {
@@ -245,8 +248,8 @@ public abstract class Char extends Actor {
 		bundle.put( POS, pos );
 		bundle.put( TAG_HP, HP );
 		bundle.put( TAG_HT, HT );
-//		bundle.put( BUFFS, buffs );
-		buff_collection.put(BUFFS, bundle);
+//		buff_collection.put(BUFFS, bundle);
+		bundle.put( BUFFS, (Bundlable) buff_collection);
 
 	}
 	
@@ -771,17 +774,19 @@ public abstract class Char extends Actor {
 		super.spend( time / timeScale );
 	}
 	
+	@SuppressWarnings("NewApi")
 	public synchronized LinkedHashSet<Buff> buffs() {
-		return buff_collection.get();
+		return buff_collection.stream().map(buff -> buff.get()).collect(Collectors.toCollection(LinkedHashSet::new));
 	}
 	
 	@SuppressWarnings("unchecked")
 	//returns all buffs assignable from the given buff class
 	public synchronized <T extends Buff> HashSet<T> buffs( Class<T> c ) {
 		HashSet<T> filtered = new HashSet<>();
-		for (Buff b : buff_collection.get()) {
-			if (c.isInstance( b )) {
-				filtered.add( (T)b );
+		for (Buff_Observer b : buff_collection) {
+			Buff temp = b.get();
+			if (c.isInstance( temp )) {
+				filtered.add( (T)temp );
 			}
 		}
 		return filtered;
@@ -790,9 +795,10 @@ public abstract class Char extends Actor {
 	@SuppressWarnings("unchecked")
 	//returns an instance of the specific buff class, if it exists. Not just assignable
 	public synchronized  <T extends Buff> T buff( Class<T> c ) {
-		for (Buff b : buff_collection.get()) {
-			if (b.getClass() == c) {
-				return (T)b;
+		for (Buff_Observer b : buff_collection) {
+			Buff temp = b.get();
+			if (temp.getClass() == c) {
+				return (T)temp;
 			}
 		}
 		return null;
@@ -800,20 +806,24 @@ public abstract class Char extends Actor {
 
 	public synchronized boolean isCharmedBy( Char ch ) {
 		int chID = ch.id();
-		for (Buff b : buff_collection.get()) {
-			if (b instanceof Charm && ((Charm)b).object == chID) {
+		for (Buff_Observer b : buff_collection) {
+			Buff temp = b.get();
+			if (temp instanceof Charm && ((Charm)temp).object == chID) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public synchronized boolean add( Buff buff ) {
+	public synchronized boolean add(Buff buff){
+		return add(Build_buff_collection.to_colleciton(buff));
+	}
+	public synchronized boolean add(Buff_Observer buff ) {
 
 		if (buff(PotionOfCleansing.Cleanse.class) != null) { //cleansing buff
-			if (buff.type == Buff.buffType.NEGATIVE
-					&& !(buff instanceof AllyBuff)
-					&& !(buff instanceof LostInventory)){
+			if (buff.get().type == NEGATIVE
+					&& !(buff.get() instanceof AllyBuff)
+					&& !(buff.get() instanceof LostInventory)){
 				return false;
 			}
 		}
@@ -823,19 +833,19 @@ public abstract class Char extends Actor {
 		}
 
 		buff_collection.add( buff );
-		if (Actor.chars().contains(this)) Actor.add( buff );
+		if (Actor.chars().contains(this)) Actor.add( buff.get());
 
-		if (sprite != null && buff.announced) {
-			switch (buff.type) {
+		if (sprite != null && buff.get().announced) {
+			switch (buff.get().type) {
 				case POSITIVE:
-					sprite.showStatus(CharSprite.POSITIVE, Messages.titleCase(buff.name()));
+					sprite.showStatus(CharSprite.POSITIVE, Messages.titleCase(buff.get().name()));
 					break;
 				case NEGATIVE:
-					sprite.showStatus(CharSprite.NEGATIVE, Messages.titleCase(buff.name()));
+					sprite.showStatus(CharSprite.NEGATIVE, Messages.titleCase(buff.get().name()));
 					break;
 				case NEUTRAL:
 				default:
-					sprite.showStatus(CharSprite.NEUTRAL, Messages.titleCase(buff.name()));
+					sprite.showStatus(CharSprite.NEUTRAL, Messages.titleCase(buff.get().name()));
 					break;
 			}
 		}
@@ -859,14 +869,15 @@ public abstract class Char extends Actor {
 		}
 	}
 	
+	@SuppressWarnings("NewApi")
 	@Override
 	protected synchronized void onRemove() {
-		buff_collection.detach();
+		buff_collection.stream().forEach(buff -> buff.get().detach());
 	}
 	
 	public synchronized void updateSpriteState() {
-		for (Buff buff:buff_collection.get()) {
-			buff.fx( true );
+		for (Buff_Observer buff:buff_collection) {
+			buff.get().fx( true );
 		}
 	}
 	

@@ -26,7 +26,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.AllyBuff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Amok;
-import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff_Observer;
 import com.shatteredpixel.shatteredpixeldungeon.messages.Messages;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.BeeSprite;
 import com.watabou.utils.Bundle;
@@ -124,7 +124,7 @@ public class Bee extends Mob {
 	}
 
 	@Override
-	public boolean add(Buff buff) {
+	public boolean add(Buff_Observer buff) {
 		if (super.add(buff)) {
 			//TODO maybe handle honeyed bees with their own ally buff?
 			if (buff instanceof AllyBuff) {

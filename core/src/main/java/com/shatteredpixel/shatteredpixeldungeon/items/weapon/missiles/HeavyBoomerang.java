@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
+import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Talent;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.ItemSpriteSheet;
 import com.shatteredpixel.shatteredpixeldungeon.sprites.MissileSprite;
 import com.watabou.noosa.tweeners.AlphaTweener;
@@ -126,7 +127,7 @@ public class HeavyBoomerang extends MissileWeapon {
 											if (returnTarget == target){
 												if (target instanceof Hero && boomerang.doPickUp((Hero) target)) {
 													//grabbing the boomerang takes no time
-													((Hero) target).spend(-getTIME_TO_PICK_UP());
+													((Hero) target).spend(-TIME_TO_PICK_UP);
 												} else {
 													Dungeon.level.drop(boomerang, returnPos).sprite.drop();
 												}

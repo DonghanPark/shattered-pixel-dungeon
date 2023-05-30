@@ -52,7 +52,7 @@ public class CeremonialCandle extends Item {
 	{
 		image = ItemSpriteSheet.CANDLE;
 
-		defaultAction = getAC_THROW();
+		defaultAction = AC_THROW;
 
 		unique = true;
 		stackable = true;

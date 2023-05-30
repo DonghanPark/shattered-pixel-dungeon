@@ -35,6 +35,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.ItemStatusHandler;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
+import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.elixirs.ElixirOfHoneyedHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.PotionOfCleansing;
@@ -196,7 +197,7 @@ public class Potion extends Item {
 	@Override
 	public String defaultAction() {
 		if (isKnown() && mustThrowPots.contains(this.getClass())) {
-			return getAC_THROW();
+			return AC_THROW;
 		} else if (isKnown() &&canThrowPots.contains(this.getClass())){
 			return AC_CHOOSE;
 		} else {
