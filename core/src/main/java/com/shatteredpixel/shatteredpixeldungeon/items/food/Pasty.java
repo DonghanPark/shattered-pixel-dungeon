@@ -24,29 +24,22 @@ package com.shatteredpixel.shatteredpixeldungeon.items.food;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Hunger;
 
 public class Pasty extends Food {
-    // TODO: implement fun stuff for other holidays
-    // TODO: probably should externalize this if I want to add any more festive stuff.
-
-    private static final Pasty pasty;
-    private static final HolidayEnum holiday;
-
+	//TODO: implement fun stuff for other holidays
+	//TODO: probably should externalize this if I want to add any more festive stuff.
+	protected static HolidayEnum holiday;
     static {
         holiday = Holiday.getHoliday();
     }
 
-    static {
-        pasty = createInstanceInternal();
-    }
+	{
+		reset();
 
-    {
-        reset();
-        energy = Hunger. STARVING;
-        bones = true;
-    }
+		energy = Hunger.STARVING;
 
-    protected Pasty() {}
+		bones = true;
+	}
 
-    private static Pasty createInstanceInternal() {
+    public static Pasty createInstance() { // singleton
         switch (holiday) {
             case NONE:
                 return new PastyNONE();
@@ -57,9 +50,5 @@ public class Pasty extends Food {
             default:
                 throw new IllegalArgumentException("Invalid holiday value: " + holiday);
         }
-    }
-
-    public static Pasty createInstance() {
-        return pasty;
     }
 }

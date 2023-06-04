@@ -488,7 +488,7 @@ public class DriedRose extends Artifact {
 				return false;
 			} if ( rose.level() >= rose.levelCap ){
 				GLog.i( Messages.get(this, "no_room") );
-				hero.spendAndNext(getTIME_TO_PICK_UP());
+				hero.spendAndNext(TIME_TO_PICK_UP);
 				return true;
 			} else {
 
@@ -500,7 +500,7 @@ public class DriedRose extends Artifact {
 
 				Sample.INSTANCE.play( Assets.Sounds.DEWDROP );
 				GameScene.pickUp(this, pos);
-				hero.spendAndNext(getTIME_TO_PICK_UP());
+				hero.spendAndNext(TIME_TO_PICK_UP);
 				return true;
 
 			}

@@ -30,7 +30,7 @@ public abstract class Runestone extends Item {
 	
 	{
 		stackable = true;
-		defaultAction = getAC_THROW();
+		defaultAction = AC_THROW;
 	}
 
 	//runestones press the cell they're thrown to by default, but a couple stones override this
@@ -38,7 +38,7 @@ public abstract class Runestone extends Item {
 
 	@Override
 	protected void onThrow(int cell) {
-		if (Dungeon.level.pit[cell] || !defaultAction().equals(getAC_THROW())){
+		if (Dungeon.level.pit[cell] || !defaultAction().equals(AC_THROW)){
 			super.onThrow( cell );
 		} else {
 			if (pressesCell) Dungeon.level.pressCell( cell );

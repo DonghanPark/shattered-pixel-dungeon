@@ -29,7 +29,12 @@ import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.LiquidMetal;
 import com.shatteredpixel.shatteredpixeldungeon.items.Recipe;
 import com.shatteredpixel.shatteredpixeldungeon.items.bombs.Bomb;
-import com.shatteredpixel.shatteredpixeldungeon.items.food.*;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Blandfruit;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.MeatPie;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.MysteryMeat;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.Pasty;
+import com.shatteredpixel.shatteredpixeldungeon.items.food.StewedMeat;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.AlchemicalCatalyst;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.Potion;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.brews.BlizzardBrew;
@@ -279,9 +284,9 @@ public class QuickRecipe extends Component {
 				}
 				return result;
 			case 2:
-				result.add(new QuickRecipe( new StewedMeat.StewedMeatRecipe(StewedMeatEnum.STEWED_MEAT_ONE) ));
-				result.add(new QuickRecipe( new StewedMeat.StewedMeatRecipe(StewedMeatEnum.STEWED_MEAT_TWO) ));
-				result.add(new QuickRecipe( new StewedMeat.StewedMeatRecipe(StewedMeatEnum.STEWED_MEAT_THREE) ));
+				result.add(new QuickRecipe( new StewedMeat.oneMeat() ));
+				result.add(new QuickRecipe( new StewedMeat.twoMeat() ));
+				result.add(new QuickRecipe( new StewedMeat.threeMeat() ));
 				result.add(null);
 				result.add(new QuickRecipe( new MeatPie.Recipe(),
 						new ArrayList<Item>(Arrays.asList(Pasty.createInstance(), new Food(), new MysteryMeat.PlaceHolder())),
