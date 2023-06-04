@@ -249,7 +249,7 @@ public abstract class Char extends Actor {
 		bundle.put( TAG_HP, HP );
 		bundle.put( TAG_HT, HT );
 //		buff_collection.put(BUFFS, bundle);
-		bundle.put( BUFFS, (Bundlable) buff_collection);
+		bundle.put( BUFFS, buff_collection);
 
 	}
 	
