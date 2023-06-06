@@ -1,8 +1,8 @@
 package com.shatteredpixel.shatteredpixeldungeon.actors.buffs;
 
-public interface Buff_Observer {
+import com.watabou.utils.Bundlable;
+
+public interface Buff_Observer extends Bundlable {
     public abstract Buff get();
     public abstract void detach();
-
-
 }

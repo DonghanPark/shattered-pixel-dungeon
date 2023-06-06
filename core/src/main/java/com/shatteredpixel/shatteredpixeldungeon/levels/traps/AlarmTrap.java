@@ -21,7 +21,7 @@
 
 package com.shatteredpixel.shatteredpixeldungeon.levels.traps;
 
-public class AlarmTrap extends Trap implements AlarmActivate{
+public class AlarmTrap extends Trap implements TrapActivate {
 
 	{
 		color = RED;
@@ -31,6 +31,6 @@ public class AlarmTrap extends Trap implements AlarmActivate{
 	@Override
 	public void activate() {
 
-		AlarmActivate.extracted(pos, this);
+		TrapActivate.startAlarmDevice(pos, this);
 	}
 }
