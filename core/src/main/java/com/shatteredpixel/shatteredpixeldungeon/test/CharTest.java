@@ -1,5 +1,6 @@
-package com.shatteredpixel.shatteredpixeldungeon.actors;
+package com.shatteredpixel.shatteredpixeldungeon.test;
 
+import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.*;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.abilities.duelist.Challenge;
